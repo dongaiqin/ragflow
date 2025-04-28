@@ -543,8 +543,10 @@ def naive_merge(sections, chunk_token_num=128, delimiter="\n。；！？"):
 
 def docx_question_level(p, bull=-1):
     txt = re.sub(r"\u3000", " ", p.text).strip()
-    if p.style.name.startswith('Heading'):
+    if p.style.name.startswith('Heading') or p.style.name.startswith("标题 "):
         return int(p.style.name.split(' ')[-1]), txt
+    elif p.style.name.startswith('标题'):
+        return int(p.style.name.split('标题')[-1]),txt
     else:
         if bull < 0:
             return 0, txt

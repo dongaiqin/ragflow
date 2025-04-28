@@ -133,7 +133,7 @@ class Docx(DocxParser):
                     last_answer, last_image = '', None
 
                 i = question_level
-                while question_stack and i <= level_stack[-1]:
+                while question_stack and i <= level_stack[-1] and i != 1:
                     question_stack.pop()
                     level_stack.pop()
                 question_stack.append(p_text)

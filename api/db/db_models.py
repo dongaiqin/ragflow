@@ -26,7 +26,7 @@ import hashlib
 
 from flask_login import UserMixin
 from itsdangerous.url_safe import URLSafeTimedSerializer as Serializer
-from peewee import BigIntegerField, BooleanField, CharField, CompositeKey, DateTimeField, Field, FloatField, IntegerField, Metadata, Model, TextField
+from peewee import BigIntegerField, BooleanField, CharField, CompositeKey, DateTimeField, Field, FloatField, DoubleField, IntegerField, Metadata, Model, TextField
 from playhouse.migrate import MySQLMigrator, PostgresqlMigrator, migrate
 from playhouse.pool import PooledMySQLDatabase, PooledPostgresqlDatabase
 
@@ -795,6 +795,29 @@ class UserCanvasVersion(DataBaseModel):
     class Meta:
         db_table = "user_canvas_version"
 
+class Feature(DataBaseModel):
+    document_id = CharField(max_length=32, null=True, help_text="document id", index=True, primary_key=True)
+    well_id = CharField(max_length=32, null=False, help_text="well id", index=True)
+    
+    process_duation = FloatField(default=0)
+    meta_fields = JSONField(null=True, default={})
+
+    initial_liquid = DoubleField(default=0)
+    initial_oil = DoubleField(default=0)
+    initial_water_ratio = DoubleField(default=0)
+
+    current_liquid = DoubleField(default=0)
+    current_oil = DoubleField(default=0)
+    current_water_ratio = DoubleField(default=0)
+    accumulate_oil = DoubleField(default=0)
+    pressure = DoubleField(default=0)
+
+    score = DoubleField(default=0)
+
+    status = CharField(max_length=1, null=False, help_text="is it validate(0: wasted, 1: validate)", default="1", index=True)  #启动是1，暂停是0
+    
+    class Meta:
+        db_table = "feature"
 
 def migrate_db():
     migrator = DatabaseMigrator[settings.DATABASE_TYPE.upper()].value(DB)
